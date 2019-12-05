@@ -13,7 +13,7 @@ pushd %BuildDir%
 :: delete pdb file and get rid of output errors
 :: del *.pdb > NUL 2> NUL
  
-set CommonCompilerFlags=/O2 /nologo -fp:fast -GR- /MP /Zi /FC /EHsc /I"..\deps\include" /W1 /MD
+set CommonCompilerFlags=/Od /nologo -fp:fast -GR- /MP /Zi /FC /EHsc /I"..\deps\include" /W1 /MD
 set CommonCompilerFlags= /std:c++latest %CommonCompilerFlags% 
 
 set CommonLinkerFlags=user32.lib gdi32.lib winmm.lib opengl32.lib kernel32.lib shell32.lib glu32.lib

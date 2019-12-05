@@ -65,11 +65,16 @@ static void glfwFrameBufferCallback(GLFWwindow *window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void ProcessInput(GLFWwindow *window)
+void ProcessInput(GLFWwindow *window, Shader& shader)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+    {
+        shader.Reload("code/basic.vert", "code/basic.frag");
     }
 }
 
@@ -140,7 +145,10 @@ int main(int, char **)
         1, 2, 3  // second triangle
     };
 
-    unsigned int shader_program = BuildShaderProgram("code/basic.vert", "code/basic.frag");
+    Shader shader("code/basic.vert", "code/basic.frag");
+    shader.Use();
+
+    shader.Reload("code/basic.vert", "code/basic.frag");
 
     // Bind our Vertex Array Object First
     unsigned int vao;
@@ -163,17 +171,16 @@ int main(int, char **)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
-    // Use our shader program
-    glUseProgram(shader_program);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        ProcessInput(window);
+        ProcessInput(window, shader);
 
         glClearColor(0.3f, 0.3f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        shader.Use();
         glBindVertexArray(vao);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

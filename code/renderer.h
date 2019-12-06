@@ -2,8 +2,7 @@
 #define RENDERER_H_
 
 
-class Renderer
-{
+class Renderer {
 public:
     Renderer();
     ~Renderer();

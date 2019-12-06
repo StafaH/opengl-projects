@@ -1,16 +1,16 @@
 #include "window.h"
 #include "shader.h"
 
-Window::Window(int width, int height, const char* title)
+Window::Window(int width, int height, const char *title)
 {
     window_width = width;
     window_height = height;
-    
+
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit())
     {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        glfwTerminate();    
+        glfwTerminate();
     }
 
     // Set opengl context versions
@@ -42,7 +42,7 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::ProcessInput(Shader& shader)
+void Window::ProcessInput(float delta_time, Shader &shader, Camera &camera)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
@@ -53,4 +53,44 @@ void Window::ProcessInput(Shader& shader)
     {
         shader.Reload("code/basic.vert", "code/basic.frag");
     }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        camera.UpdatePosition(camera.forward, delta_time);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        camera.UpdatePosition(-camera.forward, delta_time);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        camera.UpdatePosition(-camera.right, delta_time);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        camera.UpdatePosition(camera.right, delta_time);
+    }
+
+    double x_pos, y_pos;
+    glfwGetCursorPos(window, &x_pos, &y_pos);
+
+    if (first_mouse_move)
+    {
+        mouse_lastx = x_pos;
+        mouse_lasty = y_pos;
+        first_mouse_move = false;
+    }
+
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        float x_offset = x_pos - mouse_lastx;
+        float y_offset = mouse_lasty - y_pos;
+        camera.UpdateView(x_offset, y_offset);
+    }
+
+    mouse_lastx = x_pos;
+    mouse_lasty = y_pos;
 }

@@ -81,6 +81,7 @@ int main(int, char **)
         0.5f, 1.0f};
 
     Shader shader("code/basic.vert", "code/basic.frag");
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
     shader.Use();
 
     // Bind our Vertex Array Object First
@@ -114,9 +115,7 @@ int main(int, char **)
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
     glm::mat4 view = glm::mat4(1.0f);
-    // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
+    
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (float)(window.GetWindowWidth() / window.GetWindowHeight()), 0.1f, 100.0f);
 
@@ -125,10 +124,17 @@ int main(int, char **)
     shader.SetUniformMat4("view", view);
     shader.SetUniformMat4("projection", projection);
 
+    float delta_time = 0.0f;	// Time between current frame and last frame
+    float last_frame = 0.0f; // Time of last frame
+
     // Main loop
     while (!glfwWindowShouldClose(window.GetWindowHandle()))
     {
-        window.ProcessInput(shader);
+        float currentFrame = glfwGetTime();
+        delta_time = currentFrame - last_frame;
+        last_frame = currentFrame;  
+
+        window.ProcessInput(delta_time, shader, camera);
 
         glEnable(GL_DEPTH_TEST); 
         glClearColor(0.3f, 0.3f, 0.4f, 1.0f);
@@ -137,8 +143,14 @@ int main(int, char **)
         shader.Use();
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); Wireframe Mode
         model = glm::mat4(1.0f);
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(10.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(10.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+        
+        glm::mat4 view = camera.GetViewMatrix();
+
+
         shader.SetUniformMat4("model", model);
+        shader.SetUniformMat4("view", view);
 
         texture.Bind();
         glBindVertexArray(vao);

@@ -5,14 +5,15 @@
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "shader.h"
 
-class Window
-{
+#include "shader.h"
+#include "camera.h"
+
+class Window {
 public:
     Window(int width, int height, const char *title);
     ~Window();
-    void ProcessInput(Shader &shader);
+    void ProcessInput(float delta_time, Shader &shader, Camera& camera);
     GLFWwindow *GetWindowHandle() { return window; }
 
     int GetWindowWidth() { return window_width; }
@@ -21,6 +22,11 @@ private:
     GLFWwindow *window;
     int window_width, window_height;
     bool running = true;
+
+    bool first_mouse_move;
+    float mouse_lastx;
+    float mouse_lasty;
+
 };
 
 static void glfwErrorCallback(int error, const char *description)

@@ -5,8 +5,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-class Shader 
-{
+class Shader {
 public:
     Shader(const char* vertex_shader_path, const char* frag_shader_path);
     ~Shader();

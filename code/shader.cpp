@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char* vertex_shader_path, const char* frag_shader_path)
 {
@@ -52,6 +53,11 @@ void Shader::Reload(const char* vertex_shader_path, const char* frag_shader_path
 void Shader::SetUniformFloat(const std::string &name, float value) const
 {
     glUniform1f(glGetUniformLocation(shader_program_id, name.c_str()), value);
+}
+
+void Shader::SetUniformMat4(const std::string& name, glm::mat4 value) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(shader_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 std::string Shader::ReadFile(const char *shader_file)

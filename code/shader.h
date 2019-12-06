@@ -3,6 +3,7 @@
 
 #include <string>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 class Shader 
 {
@@ -13,6 +14,7 @@ public:
     void Use();
     void Reload(const char* vertex_shader_path, const char* frag_shader_path);
     void SetUniformFloat(const std::string &name, float value) const;
+    void SetUniformMat4(const std::string& name, glm::mat4 value) const;
 
 private:
     std::string ReadFile(const char *shader_file);

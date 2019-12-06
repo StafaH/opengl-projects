@@ -3,6 +3,9 @@
 
 Window::Window(int width, int height, const char* title)
 {
+    window_width = width;
+    window_height = height;
+    
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit())
     {

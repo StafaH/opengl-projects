@@ -15,9 +15,11 @@ public:
     void ProcessInput(Shader &shader);
     GLFWwindow *GetWindowHandle() { return window; }
 
+    int GetWindowWidth() { return window_width; }
+    int GetWindowHeight() { return window_height; }
 private:
     GLFWwindow *window;
-    int width, height;
+    int window_width, window_height;
     bool running = true;
 };
 
